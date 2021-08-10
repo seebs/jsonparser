@@ -160,26 +160,15 @@ func lastToken(data []byte) int {
 // Support if string contains escaped quote symbols.
 func stringEnd(data []byte) (int, bool) {
 	escaped := false
-	for i, c := range data {
+	ln := len(data)
+	for i := 0; i < ln; i++ {
+		c := data[i]
 		if c == '"' {
-			if !escaped {
-				return i + 1, false
-			} else {
-				j := i - 1
-				for {
-					if j < 0 || data[j] != '\\' {
-						return i + 1, true // even number of backslashes
-					}
-					j--
-					if j < 0 || data[j] != '\\' {
-						break // odd number of backslashes
-					}
-					j--
-
-				}
-			}
-		} else if c == '\\' {
+			return i+1, escaped
+		}
+		if c == '\\' {
 			escaped = true
+			i++
 		}
 	}
 
